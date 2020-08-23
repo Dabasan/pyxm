@@ -7,6 +7,11 @@ from npy3d.matrix import Matrix
 from typing import Dict,List,Tuple
 import pathlib
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from client import PyXMClient
+
 class UV(object):
     """
     UV
@@ -95,12 +100,12 @@ class BD1Manipulator(object):
         self.gateway=client.get_gateway()
         self.entry_point=client.get_entry_point()
 
-        entry_point.startBD1ManipulatorServer(java_port,python_port)
+        self.entry_point.startBD1ManipulatorServer(java_port,python_port)
         if filepath is None:
-            entry_point.instantiate_BD1Manipulator()
+            self.entry_point.instantiate_BD1Manipulator()
         else:
             abs_filepath=pathlib.Path(filepath).resolve().__str__()
-            entry_point.instantiate_BD1Manipulator(abs_filepath)
+            self.entry_point.instantiate_BD1Manipulator(abs_filepath)
 
     def get_blocks(self)->List[BD1Block]:
         self.entry_point.loadBlocksToLists_BD1Manipulator()
@@ -180,7 +185,7 @@ class BD1Manipulator(object):
             vertex_positions_list,uvs_list,texture_ids_list,enabled_flags_list
         )
 
-    def get_num_blocks(self):
+    def get_num_blocks(self)->int:
         return self.entry_point.getNumBlocks_BD1Manipulator()
     
     def get_texture_filename(self,texture_id:int)->str:
